@@ -33,6 +33,12 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+      'import/no-unassigned-import': [
+        'error',
+        {
+          allow: ['**/*.css', '**/*.scss'],
+        },
+      ],
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'prettier/prettier': [
@@ -86,6 +92,13 @@ export default [
           ],
         },
       ],
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './tsconfig.json',
+        },
+      },
     },
   },
 ];
