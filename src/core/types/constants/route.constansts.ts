@@ -6,4 +6,7 @@ export const ROUTES = {
   USER_DASHBOARD: '/dashboard',
   ADMIN_DASHBOARD: '/admin/dashboard',
   ADMIN_PANEL: '/admin/panel',
+  UNAUTHORIZED: '/403',
+  NOT_FOUND: '/not-found',
+  ERROR: '/error',
 };
