@@ -2,7 +2,7 @@ import { Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
-import { Navbar } from '@app/core/components/layouts';
+import { Footer, Navbar } from '@app/core/components/layouts';
 import { useGetProfile } from '@app/core/hooks';
 
 const AuthLayout = () => {
@@ -13,10 +13,13 @@ const AuthLayout = () => {
   }
 
   return (
-    <div>
+    <>
       <Navbar />
-      <Outlet />
-    </div>
+      <div className='min-h-screen'>
+        <Outlet />
+      </div>
+      <Footer />
+    </>
   );
 };
 

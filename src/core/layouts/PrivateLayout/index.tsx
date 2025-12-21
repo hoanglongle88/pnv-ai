@@ -1,13 +1,14 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { useAppSelector } from '@app/core/redux/hooks';
 import { ROUTES } from '@app/core/types/constants';
 
 const PrivateLayout = () => {
-  const isAuth = useAppSelector((state) => state.auth);
+  const { isAuth } = useAppSelector((state) => state.auth);
+  const location = useLocation();
 
   if (!isAuth) {
-    return <Navigate to={ROUTES.LOGIN} replace />;
+    return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
   return <Outlet />;
