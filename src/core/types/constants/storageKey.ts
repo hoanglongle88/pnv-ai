@@ -1,3 +1,11 @@
-export const STORAGE_KEY = {
-  ACCESS_TOKEN: 'access_token',
+const ACCESS_TOKEN = 'accessToken';
+const REFRESH_TOKEN = 'refreshToken';
+const USER_PROFILE = 'user';
+
+const AUTH_ACTION_KEY = {
+  SET_NOT_AUTH: 'SET_NOT_AUTH',
+  SET_USER: 'SET_USER',
+  SET_AUTHEN: 'SET_AUTHEN',
 };
+
+export { ACCESS_TOKEN, AUTH_ACTION_KEY, REFRESH_TOKEN, USER_PROFILE };

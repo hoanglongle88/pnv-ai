@@ -1,23 +1,11 @@
-import { API_URL } from '../types/constants';
 import axiosInstance from '@app/core/config/axios';
-import {
-  AuthData,
-  LoginPayload,
-  RegisterPayload,
-  User,
-  type ApiResponse,
-} from '@app/core/types/interface';
+import { API_URL } from '@app/core/types/constants';
+import { RegisterPayload, LoginPayload, User } from '@app/core/types/interfaces';
 
-export const authAPI = {
-  register(payload: RegisterPayload): Promise<ApiResponse<AuthData>> {
-    return axiosInstance.post(API_URL.REGISTER, payload);
-  },
+export const getProfileApi = () => axiosInstance.get<{ data: User }>(API_URL.PROFILE);
 
-  login(payload: LoginPayload): Promise<ApiResponse<AuthData>> {
-    return axiosInstance.post(API_URL.LOGIN, payload);
-  },
+export const loginApi = (LoginPayload: LoginPayload) =>
+  axiosInstance.post(API_URL.LOGIN, LoginPayload);
 
-  getProfile(): Promise<ApiResponse<User>> {
-    return axiosInstance.get(API_URL.PROFILE);
-  },
-};
+export const registerApi = (RegisterPayload: RegisterPayload) =>
+  axiosInstance.post(API_URL.REGISTER, RegisterPayload);

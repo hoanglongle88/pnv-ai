@@ -1,56 +1,98 @@
-import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { useAppDispatch } from '../redux/hooks';
-import { clearAuth, setAuth } from '../redux/slices/auth.slice';
-import { AppDispatch } from '../redux/store';
-import { authAPI } from '../services';
-import { STORAGE_KEY } from '../types/constants';
-import { AUTH_QUERY_KEY } from '../types/constants/queryKey';
-import { storage } from '@app/core/config/storage';
-import { ApiResponse, AuthData, RegisterPayload } from '@app/core/types/interface';
+import { removeStorageData, setStorageData } from '../config/storage';
+import { login, logout, setAuth } from '../redux/features/auth/authSlice';
+import { getProfileApi, loginApi, registerApi } from '@app/core/services';
+import { ACCESS_TOKEN, AUTH_QUERY_KEY, ROUTES, USER_PROFILE } from '@app/core/types/constants';
+import { RegisterPayload, LoginPayload, User } from '@app/core/types/interfaces';
+
+export const USER_QUERY_KEY = {
+  PROFILE: ['user-profile'],
+};
 
 export const useRegister = () => {
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  return useMutation({
-    mutationFn: (payload: RegisterPayload) => authAPI.register(payload),
-
-    onSuccess: (res: ApiResponse<AuthData>) => {
-      storage.set(STORAGE_KEY.ACCESS_TOKEN, res.data.token);
-      queryClient.setQueryData(AUTH_QUERY_KEY.PROFILE, res.data.user);
+  return useMutation(
+    async (registerUserDto: RegisterPayload) => {
+      const { data } = await registerApi(registerUserDto);
+      return data;
     },
-  });
+    {
+      onSuccess: () => {
+        navigate('/login');
+      },
+      onError({ response }) {
+        console.log(response.data.message);
+      },
+    },
+  );
 };
 
 export const useLogin = () => {
-  const dispatch = useAppDispatch();
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const dispatchAuth = useDispatch();
 
-  return useMutation({
-    mutationFn: authAPI.login,
-    onSuccess: (res) => {
-      storage.set(STORAGE_KEY.ACCESS_TOKEN, res.data.token);
-      dispatch(setAuth(res.data.user));
-      queryClient.setQueryData(AUTH_QUERY_KEY.PROFILE, res.data.user);
+  return useMutation(
+    async (LoginPayload: LoginPayload) => {
+      const { data } = await loginApi(LoginPayload);
+      return data;
     },
-  });
+    {
+      onSuccess: ({ data }) => {
+        dispatchAuth(login());
+        dispatchAuth(
+          setAuth({
+            user: { name: data?.user.username },
+            permissions: [],
+          }),
+        );
+        setStorageData(ACCESS_TOKEN, data?.token);
+        setStorageData(USER_PROFILE, data.user);
+
+        navigate('/');
+      },
+      onError({ response }) {
+        console.log(response.data.message);
+      },
+    },
+  );
 };
 
-export const useProfile = () => {
-  const token = storage.get<string>(STORAGE_KEY.ACCESS_TOKEN);
+export const useLogout = () => {
+  const navigate = useNavigate();
+  const dispatchAuth = useDispatch();
 
-  return useQuery({
-    queryKey: AUTH_QUERY_KEY.PROFILE,
-    queryFn: async () => {
-      const res = await authAPI.getProfile();
-      return res.data;
-    },
-    enabled: !!token,
-  });
+  const handleLogout = () => {
+    removeStorageData(ACCESS_TOKEN);
+    removeStorageData(USER_PROFILE);
+
+    dispatchAuth(logout());
+
+    navigate(ROUTES.LOGIN);
+
+    window.location.reload();
+  };
+
+  return { handleLogout };
 };
 
-export const logout = (queryClient: QueryClient, dispatch: AppDispatch) => {
-  storage.clear();
-  dispatch(clearAuth());
-  queryClient.clear();
+export const useGetProfile = (isAuth = true) => {
+  const dispatch = useDispatch();
+
+  return useQuery<User>(
+    [AUTH_QUERY_KEY.PROFILE],
+    async () => {
+      const { data } = await getProfileApi();
+      return data.data;
+    },
+    {
+      onSuccess(data) {
+        dispatch(setAuth(data));
+      },
+      enabled: isAuth,
+    },
+  );
 };

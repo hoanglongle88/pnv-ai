@@ -1,9 +1,9 @@
+import Login from './Authenticate/Login';
+import Register from './Authenticate/Register';
 import Dashboard from './Dashboard';
-import Error from './Error';
+import NotFound from './Exception/NotFound';
 import Home from './Home';
-import Login from './Login';
-import NotFound from './NotFound';
-import Register from './Register';
-import Unauthorized from './Unauthorized';
+import PostList from './Post';
+import UserProfile from './UserProfile';
 
-export { Dashboard, Home, Login, Register, Error, NotFound, Unauthorized };
+export { Dashboard, Home, Login, Register, NotFound, UserProfile, PostList };

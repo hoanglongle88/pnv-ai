@@ -1,29 +1,48 @@
-import axios from 'axios';
+import axios, { InternalAxiosRequestConfig } from 'axios';
+
+import { getStorageData, removeStorageData } from '@app/core/config/storage';
+import { ACCESS_TOKEN, API_URL, CLIENT_TYPE, USER_PROFILE } from '@app/core/types/constants';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL_API;
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: BASE_URL,
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  (config: InternalAxiosRequestConfig) => {
+    if (config.url === API_URL.LOGIN) {
+      config.headers['X-Client-Type'] = CLIENT_TYPE;
+      return config;
     }
+
+    const accessToken = getStorageData(ACCESS_TOKEN);
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     return config;
   },
   (error) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   (error) => {
-    return Promise.reject(error?.response?.data || error);
+    const { response } = error;
+
+    if (response?.status === 401) {
+      clearAuthStorage();
+    }
+
+    return Promise.reject(error);
   },
 );
+
+function clearAuthStorage() {
+  removeStorageData(USER_PROFILE);
+  removeStorageData(ACCESS_TOKEN);
+}
 
 export default axiosInstance;

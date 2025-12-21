@@ -9,6 +9,11 @@ export default defineConfig({
     alias: { '@app': path.resolve('./src') },
   },
   server: {
-    port: Number(process.env.VITE_PORT) || 6002,
+    watch: {
+      usePolling: true,
+    },
+    host: true,
+    strictPort: true,
+    port: 5001,
   },
 });

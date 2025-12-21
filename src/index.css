@@ -1,29 +1,39 @@
 @import 'tailwindcss';
 
 :root {
-  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg-main: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-soft: #334155;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary-orange: #f97316;
+  --primary-orange-hover: #ea580c;
+  --secondary-blue: #7dd3fc;
+  --secondary-blue-soft: #38bdf8;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-}
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  --shadow-3d: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  --border-light: rgba(255, 255, 255, 0.1);
+  --glass-effect: rgba(30, 41, 59, 0.7);
 }
 
 body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.card-3d {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-3d);
+  backdrop-filter: blur(10px);
+}
+
+.glow-orange {
+  filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.4));
 }

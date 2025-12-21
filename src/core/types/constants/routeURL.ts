@@ -1,11 +1,10 @@
 export const ROUTES = {
-  HOME: '/home',
+  HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
-  USER_DASHBOARD: '/dashboard',
   ADMIN_DASHBOARD: '/admin/dashboard',
-  ADMIN_PANEL: '/admin/panel',
-  UNAUTHORIZED: '/403',
   NOT_FOUND: '/not-found',
-  ERROR: '/error',
+  FORBIDDEN: '/forbidden',
+  USER_PROFILE: '/user/profile',
+  POST_MANAGEMENT: '/post',
 };
