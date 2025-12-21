@@ -1,4 +1,3 @@
-// src/core/routes/route.constants.ts
 export const ROUTES = {
   HOME: '/home',
   LOGIN: '/login',
